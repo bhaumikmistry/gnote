@@ -1,5 +1,9 @@
 import json
 import os
+import string
+import random
+import copy
+import datetime
 
 class constants:
     NOTES="notes"
@@ -20,12 +24,12 @@ class constants:
         "notes":[]\
         }]
 
-    empty_note = [{\
-        "created":"some_date",\
-        "edited":"last_date",\
-        "revised":"last_revised",\
+    empty_note = '[{\
+        "created":"",\
+        "edited":"",\
+        "revised":"",\
         "data":""\
-        }]
+        }]'
     
 class json_io:
     
@@ -41,16 +45,36 @@ class json_io:
 
     def __create_empty_json_note(self):
         # create empty tag file
-        tag_file = json.loads(constants.empty_tag)
-        # add empty note to note structure notes list 
-        tag_file[constants.CONTENT]+=constants.empty_notes_holder
-        # add empty single note structure to notes list
-        for notes in tag_file[constants.CONTENT]:
-            notes[constants.NOTES]+=constants.empty_note
+        tag_file = json.loads(copy.deepcopy(constants.empty_tag))
+        tag_file = self.__create_empty_note(tag_file)
         return tag_file
+
+    def __create_empty_note(self,tag_file):
+        # add empty note to note structure notes list 
+        tag_file[constants.CONTENT]+=copy.deepcopy(constants.empty_notes_holder)
+        return tag_file
+
+    def __add_data_to(self,tag_file,tag_name,note_name):
+        if tag_file[constants.TAG] == tag_name:
+            for notes in tag_file[constants.CONTENT]:
+                if notes[constants.NAME]==note_name:
+                    empty_note = json.loads(copy.deepcopy(constants.empty_note))
+                    letters = string.ascii_lowercase
+                    # get data and other info ready to store
+                    data = ''.join(random.choice(letters) for i in range(10))
+                    data_created_time = datetime.datetime.now().strftime("%H_%M_%S_%m_%d_%Y")
+                    empty_note[0][constants.DATA] = data
+                    empty_note[0][constants.CREATED] = data_created_time                    
+                    notes[constants.NOTES] += empty_note
+                    print(f"after creating note {notes}")
+                    break
+            return tag_file
+        else:
+            return tag_file
 
     def create(self):
         # check of the note with tag name exists
+        print(self._name)
         if not self._if_json_exists:
             # add tag and note name 
             empty_file = self.__create_empty_json_note()
@@ -58,10 +82,36 @@ class json_io:
             for name in empty_file[constants.CONTENT]:
                 if name[constants.NAME] == '':
                     name[constants.NAME] = self._name
+                    empty_file = self.__add_data_to(empty_file,self._tag,self._name)
+                    break
             print(empty_file)
             self.__save(empty_file)
         else:
+            # add note to the available tag file
+            tag_file = {}
             print(f"{self._json_name} already present")
+            # open file and json object
+            with open(self._json_name,'r') as jsonfile:
+                tag_file = json.load(jsonfile)
+            # check if the note name already present
+            for name in tag_file[constants.CONTENT]:
+                if name[constants.NAME] == self._name:
+                    print(f"{self._tag}\{self._name} already present append data to the note array")
+                    tag_file = self.__add_data_to(tag_file,self._tag,self._name)
+                    self.__save(tag_file)
+                    return
+
+            # check if the note is not present add new
+            tag_file = self.__create_empty_note(tag_file)
+            if tag_file[constants.TAG] == self._tag:
+                for name in tag_file[constants.CONTENT]:
+                    if name[constants.NAME]== '':
+                        name[constants.NAME] = self._name
+                        tag_file = self.__add_data_to(tag_file,self._tag,self._name)
+                        break
+            print(f"before save {tag_file}")
+            self.__save(tag_file)
+
         
     def __save(self,data_to_save):
         with open(self._json_name,'w') as jsonfile:
@@ -74,5 +124,9 @@ class json_io:
         pass
 
 if __name__ == "__main__":
-    jio = json_io("cpp","test")
+    jio = json_io("java","test_one")
     jio.create()
+    jio2 = json_io("yoga","test_two")
+    jio2.create()
+    jio3 = json_io("yoga","test_three")
+    jio3.create()
