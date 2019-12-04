@@ -4,6 +4,8 @@ import string
 import random
 import copy
 import datetime
+import sys, tempfile, os
+from subprocess import call
 
 class constants:
     NOTES="notes"
@@ -54,6 +56,22 @@ class json_io:
         tag_file[constants.CONTENT]+=copy.deepcopy(constants.empty_notes_holder)
         return tag_file
 
+    def __get_data_from_user(self):
+        EDITOR = os.environ.get('EDITOR','vim') #that easy!
+
+        initial_message = b"" # if you want to set up the file somehow
+
+        with tempfile.NamedTemporaryFile(suffix=".tmp") as tf:
+            tf.write(initial_message)
+            tf.flush()
+            call([EDITOR, tf.name])
+
+            # do the parsing with `tf` using regular File operations.
+            # for instance:
+            tf.seek(0)
+            edited_message = tf.read()
+        return edited_message.decode("utf-8")
+
     def __add_data_to(self,tag_file,tag_name,note_name):
         if tag_file[constants.TAG] == tag_name:
             for notes in tag_file[constants.CONTENT]:
@@ -63,6 +81,9 @@ class json_io:
                     # get data and other info ready to store
                     data = ''.join(random.choice(letters) for i in range(10))
                     data_created_time = datetime.datetime.now().strftime("%H_%M_%S_%m_%d_%Y")
+
+                    data = self.__get_data_from_user()
+
                     empty_note[0][constants.DATA] = data
                     empty_note[0][constants.CREATED] = data_created_time                    
                     notes[constants.NOTES] += empty_note
@@ -126,7 +147,3 @@ class json_io:
 if __name__ == "__main__":
     jio = json_io("java","test_one")
     jio.create()
-    jio2 = json_io("yoga","test_two")
-    jio2.create()
-    jio3 = json_io("yoga","test_three")
-    jio3.create()
