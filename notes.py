@@ -49,7 +49,7 @@ class notes:
             edited_message = tf.read()
         return edited_message.decode("utf-8")
 
-    def __add_data_to(self,tag_file,tag_name,note_name):
+    def __add_data_to(self,tag_file,tag_name,note_name,data_to_add=None):
         if tag_file[constants.TAG] == tag_name:
             for notes in tag_file[constants.CONTENT]:
                 if notes[constants.NAME]==note_name:
@@ -57,7 +57,10 @@ class notes:
                     
                     data_created_time = datetime.datetime.now().strftime("%H_%M_%S_%m_%d_%Y")
 
-                    data = self.__get_data_from_user()
+                    if data_to_add is not None:
+                        data = data_to_add
+                    else:
+                        data = self.__get_data_from_user()
                     if data == "":
                         break
 
@@ -72,9 +75,10 @@ class notes:
     def __add_tag_to_master_list(self,tag):
         pass
 
-    def create(self):
+    def create(self,data_to_add=None):
         # check of the note with tag name exists
-        print(self._name)
+        ms = master_list_tag()
+        ms.add_tag(self._tag)
         if not self._if_json_exists:
             # add tag and note name 
             empty_file = self.__create_empty_json_note()
@@ -82,22 +86,21 @@ class notes:
             for name in empty_file[constants.CONTENT]:
                 if name[constants.NAME] == '':
                     name[constants.NAME] = self._name
-                    empty_file = self.__add_data_to(empty_file,self._tag,self._name)
+                    empty_file = self.__add_data_to(empty_file,self._tag,self._name,data_to_add)
                     break
-            print(empty_file)
             self.__save(empty_file)
         else:
             # add note to the available tag file
             tag_file = {}
-            print(f"{self._json_name} already present")
+            # print(f"{self._json_name} already present")
             # open file and json object
             with open(self._json_name,'r') as jsonfile:
                 tag_file = json.load(jsonfile)
             # check if the note name already present
             for name in tag_file[constants.CONTENT]:
                 if name[constants.NAME] == self._name:
-                    print(f"{self._tag}\{self._name} already present append data to the note array")
-                    tag_file = self.__add_data_to(tag_file,self._tag,self._name)
+                    # print(f"{self._tag}\{self._name} already present append data to the note array")
+                    tag_file = self.__add_data_to(tag_file,self._tag,self._name,data_to_add)
                     self.__save(tag_file)
                     return
 
@@ -123,11 +126,11 @@ class notes:
     def edit(self):
         pass
 
-if __name__ == "__main__":
-    # jio = notes("java","test_one")
-    # jio.create()
-    letters = string.ascii_lowercase
-    data = ''.join(random.choice(letters) for i in range(10))
-    ms = master_list_tag()
-    ms.add_tag(data)
-    print(ms.get_list())
+# if __name__ == "__main__":
+#     # jio = notes("java","test_one")
+#     # jio.create()
+#     letters = string.ascii_lowercase
+#     data = ''.join(random.choice(letters) for i in range(10))
+#     ms = master_list_tag()
+#     ms.add_tag(data)
+#     print(ms.get_list())
