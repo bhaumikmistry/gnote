@@ -6,34 +6,11 @@ import copy
 import datetime
 import sys, tempfile, os
 from subprocess import call
+import pathlib
+from constants import constants
+from master_list_tag import master_list_tag
 
-class constants:
-    NOTES="notes"
-    CONTENT="content"
-    CREATED="created"
-    EDITED="edited"
-    REVISED="revised"
-    DATA="data"
-    NAME="name"
-    TAG="tag"
-    empty_tag = '{\
-        "tag":"",\
-        "content":[]\
-        }'
-            
-    empty_notes_holder = [{\
-        "name":"",\
-        "notes":[]\
-        }]
-
-    empty_note = '[{\
-        "created":"",\
-        "edited":"",\
-        "revised":"",\
-        "data":""\
-        }]'
-    
-class json_io:
+class notes:
     
     def __init__(self,tag,name):
         self._tag = tag
@@ -77,9 +54,7 @@ class json_io:
             for notes in tag_file[constants.CONTENT]:
                 if notes[constants.NAME]==note_name:
                     empty_note = json.loads(copy.deepcopy(constants.empty_note))
-                    letters = string.ascii_lowercase
-                    # get data and other info ready to store
-                    data = ''.join(random.choice(letters) for i in range(10))
+                    
                     data_created_time = datetime.datetime.now().strftime("%H_%M_%S_%m_%d_%Y")
 
                     data = self.__get_data_from_user()
@@ -93,6 +68,9 @@ class json_io:
             return tag_file
         else:
             return tag_file
+
+    def __add_tag_to_master_list(self,tag):
+        pass
 
     def create(self):
         # check of the note with tag name exists
@@ -146,5 +124,10 @@ class json_io:
         pass
 
 if __name__ == "__main__":
-    jio = json_io("java","test_one")
-    jio.create()
+    # jio = notes("java","test_one")
+    # jio.create()
+    letters = string.ascii_lowercase
+    data = ''.join(random.choice(letters) for i in range(10))
+    ms = master_list_tag()
+    ms.add_tag(data)
+    print(ms.get_list())
