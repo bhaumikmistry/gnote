@@ -83,11 +83,12 @@ class json_io:
                     data_created_time = datetime.datetime.now().strftime("%H_%M_%S_%m_%d_%Y")
 
                     data = self.__get_data_from_user()
+                    if data == "":
+                        break
 
                     empty_note[0][constants.DATA] = data
                     empty_note[0][constants.CREATED] = data_created_time                    
                     notes[constants.NOTES] += empty_note
-                    print(f"after creating note {notes}")
                     break
             return tag_file
         else:
