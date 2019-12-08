@@ -61,6 +61,8 @@ class notes:
                         data = data_to_add
                     else:
                         data = self.__get_data_from_user()
+                    
+                    print(data)
                     if data == "":
                         break
 

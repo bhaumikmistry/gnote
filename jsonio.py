@@ -23,7 +23,7 @@ class jsonio:
         
         Arguments:
             json_data {[dict]} -- [json data to write]
-            filename {[string]} -- [file namt to write to]
+            filename {[string]} -- [file name to write to]
         
         Keyword Arguments:
             indent {int} -- [description] (default: {4})
@@ -31,4 +31,4 @@ class jsonio:
         self._file_name = filename
         self._json_data = json_data
         with open(filename,'w') as jsonfile:
-            json.dump(tag_file, json_data, indent=indent)
+            json.dump(json_data, jsonfile, indent=indent)

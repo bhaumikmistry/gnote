@@ -2,6 +2,8 @@ import json
 import pathlib
 from jsonio import jsonio
 from constants import constants
+import os
+import copy
 
 class master_list_tag:
     def __init__(self):
