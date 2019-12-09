@@ -15,3 +15,6 @@ Work in progress . .
 - [ ] work on edit the note
     - [x] windows
     - [ ] macs
+- [ ] add display class
+    - [ ] define methods
+    - [ ] test
