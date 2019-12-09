@@ -6,6 +6,12 @@ Work in progress . .
 
 - TODO
 - [ ] Add git support for update
-- [ ] Add 'add note' functionality
-- [ ] Add more documents 
+- [X] Add 'add note' functionality
+- [X] Add more documents 
 - [ ] Write tests
+- [X] Add json read io
+- [X] add master list of notes
+- [X] add list all notes support
+- [ ] work on edit the note
+    - [x] windows
+    - [ ] macs
