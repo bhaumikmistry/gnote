@@ -77,6 +77,7 @@ if __name__ == "__main__":
     parser.add_argument('-u', '-update', required=False,help="use -u to add update note", action='store_true')
     parser.add_argument('-l', '-list', required=False,help="use -l to list default tags", action='store_true')
     parser.add_argument('-lnotes', required=False,help="use -l to list notes", action='store_true')
-    
+    parser.add_argument('--show-data', required=False,help="use -l to list notes", action='store_true')
+
     args = parser.parse_args()
     navigator(args)
