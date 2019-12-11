@@ -13,8 +13,8 @@ Work in progress . .
 - [X] add master list of notes
 - [X] add list all notes support
 - [ ] work on edit the note
-    - [x] windows
-    - [ ] macs
+    - [X] windows
+    - [X] macs using click
 - [ ] add display class
     - [ ] define methods
     - [ ] test

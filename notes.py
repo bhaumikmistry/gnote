@@ -38,6 +38,9 @@ class notes:
 
         initial_message = b"" # if you want to set up the file somehow
 
+        # Use click for input from user
+        # tested in windows
+
         with tempfile.NamedTemporaryFile(suffix=".tmp") as tf:
             tf.write(initial_message)
             tf.flush()
