@@ -9,6 +9,8 @@ from subprocess import call
 import pathlib
 from constants import constants
 from master_list_tag import master_list_tag
+import platform
+import click 
 
 class notes:
     
@@ -38,19 +40,26 @@ class notes:
 
         initial_message = b"" # if you want to set up the file somehow
 
-        # Use click for input from user
-        # tested in windows
+        if platform.system() is 'Windows':
+            with tempfile.NamedTemporaryFile(suffix=".tmp") as tf:
+                tf.write(initial_message)
+                tf.flush()
+                call([EDITOR, tf.name])
 
-        with tempfile.NamedTemporaryFile(suffix=".tmp") as tf:
-            tf.write(initial_message)
-            tf.flush()
-            call([EDITOR, tf.name])
+                # do the parsing with `tf` using regular File operations.
+                # for instance:
+                tf.seek(0)
+                edited_message = tf.read()
 
-            # do the parsing with `tf` using regular File operations.
-            # for instance:
-            tf.seek(0)
-            edited_message = tf.read()
-        return edited_message.decode("utf-8")
+            message = edited_message.decode("utf-8")
+            if message is None:
+                return ""  
+            return edited_message.decode("utf-8")
+        else:
+            message = click.edit()
+            if message is None:
+                return ""
+            return click.edit()
 
     def __add_data_to(self,tag_file,tag_name,note_name,data_to_add=None):
         if tag_file[constants.TAG] == tag_name:
