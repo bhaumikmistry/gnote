@@ -12,7 +12,7 @@ Work in progress . .
 - [X] Add json read io
 - [X] add master list of notes
 - [X] add list all notes support
-- [ ] work on edit the note
+- [X] work on edit the note
     - [X] windows
     - [X] macs using click
 - [ ] add display class
