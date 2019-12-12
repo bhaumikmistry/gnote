@@ -1,6 +1,9 @@
-
-
-
+from jsonio import jsonio
+from master_list_tag import master_list_tag
+from constants import constants
+import pathlib
+import subprocess
+import errno
 
 class display:
     def __init__(self):
@@ -15,30 +18,36 @@ class display:
         pass
 
     def list_tag(self):
-        for tag in self.tag_list:
-            print(f't: {tag[:self.number_char-2]}..') if len(tag) > self.number_char else print(f't: {tag.ljust(self.number_char)}')
+        with tempfile.NamedTemporaryFile(mode='w+t') as temp_file:
+            for tag in self.tag_list:
+                temp_file.writelines(f't: {tag[:self.number_char-2]}..') if len(tag) > self.number_char else temp_file.writelines(f't: {tag.ljust(self.number_char)}\n')
+            temp_file.seek(0)
+            subprocess.call(['more',temp_file.name])
+        
 
     def list_tag_note_name(self,args_t):
-        if args_t is None:
-            for tag in self.tag_list:
+        with tempfile.NamedTemporaryFile(mode='w+t') as temp_file:
+            if args_t is None:
+                for tag in self.tag_list:
+                    if not pathlib.Path(f'{tag}.json').exists():
+                        temp_file.writelines(f'Error: Tag {tag} not found, may have been deleted\n')
+                        continue
+                    js = jsonio()
+                    tag_file = js.read(f'{tag}.json')
+                    for note in tag_file[constants.CONTENT]:
+                        temp_file.writelines(f't: {tag[:self.number_char-2]}.. n {note[constants.NAME]}\n') if len(tag) > self.number_char else temp_file.writelines(f't: {tag.ljust(self.number_char)} n: {note[constants.NAME]}\n')
+            else:
+                tag = args_t
                 if not pathlib.Path(f'{tag}.json').exists():
-                    print(f'Error: Tag {tag} not found, may have been deleted')
-                    continue
+                    temp_file.writelines(f'Error: Tag {tag} not found\n')
+                    return
                 js = jsonio()
                 tag_file = js.read(f'{tag}.json')
                 for note in tag_file[constants.CONTENT]:
-                    print(f't: {tag[:self.number_char-2]}.. n {note[constants.NAME]}') if len(tag) > self.number_char \ 
-                    else print(f't: {tag.ljust(self.number_char)} n: {note[constants.NAME]}')
-        else:
-            tag = args_t
-            if not pathlib.Path(f'{tag}.json').exists():
-                print(f'Error: Tag {tag} not found')
-                return
-            js = jsonio()
-            tag_file = js.read(f'{tag}.json')
-            for note in tag_file[constants.CONTENT]:
-                print(f't: {tag[:self.number_char-2]}.. n {note[constants.NAME]}') if len(tag) > self.number_char else\
-                    print(f't: {tag.ljust(self.number_char)} n: {note[constants.NAME]}')
+                    temp_file.writelines(f't: {tag[:self.number_char-2]}.. n {note[constants.NAME]}\n') if len(tag) > self.number_char else\
+                        temp_file.writelines(f't: {tag.ljust(self.number_char)} n: {note[constants.NAME]}\n')
+            temp_file.seek(0)
+            subprocess.call(['less',temp_file.name])
 
     def list_tag_note_name_with_data(self):
         pass

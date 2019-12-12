@@ -5,6 +5,7 @@ from master_list_tag import master_list_tag
 from jsonio import jsonio
 import pathlib
 from constants import constants
+from display import display
 
 class gnote:
 
@@ -42,29 +43,33 @@ def navigator(args):
         tags = mlt.get_list()
 
         if args.lnotes:
-            if args.t is None:
-                for tag in tags:
-                    if not pathlib.Path(f'{tag}.json').exists():
-                        print(f'Error: Tag {tag} not found, may have been deleted')
-                        continue
-                    js = jsonio()
-                    tag_file = js.read(f'{tag}.json')
-                    for note in tag_file[constants.CONTENT]:
-                        print(f't: {tag[:8]}.. n {note[constants.NAME]}') if len(tag) > 10 else\
-                            print(f't: {tag.ljust(10)} n: {note[constants.NAME]}')
-            else:
-                tag = args.t
-                if not pathlib.Path(f'{tag}.json').exists():
-                    print(f'Error: Tag {tag} not found')
-                    return
-                js = jsonio()
-                tag_file = js.read(f'{tag}.json')
-                for note in tag_file[constants.CONTENT]:
-                    print(f't: {tag[:8]}.. n {note[constants.NAME]}') if len(tag) > 10 else\
-                        print(f't: {tag.ljust(10)} n: {note[constants.NAME]}')
+            d = display()
+            d.list_tag_note_name(args.t)
+            # if args.t is None:
+            #     for tag in tags:
+            #         if not pathlib.Path(f'{tag}.json').exists():
+            #             print(f'Error: Tag {tag} not found, may have been deleted')
+            #             continue
+            #         js = jsonio()
+            #         tag_file = js.read(f'{tag}.json')
+            #         for note in tag_file[constants.CONTENT]:
+            #             print(f't: {tag[:8]}.. n {note[constants.NAME]}') if len(tag) > 10 else\
+            #                 print(f't: {tag.ljust(10)} n: {note[constants.NAME]}')
+            # else:
+            #     tag = args.t
+            #     if not pathlib.Path(f'{tag}.json').exists():
+            #         print(f'Error: Tag {tag} not found')
+            #         return
+            #     js = jsonio()
+            #     tag_file = js.read(f'{tag}.json')
+            #     for note in tag_file[constants.CONTENT]:
+            #         print(f't: {tag[:8]}.. n {note[constants.NAME]}') if len(tag) > 10 else\
+            #             print(f't: {tag.ljust(10)} n: {note[constants.NAME]}')
         else:
-            for tag in tags:
-                print(f't: {tag[:8]}..') if len(tag) > 10 else print(f't: {tag.ljust(10)}')
+            d = display()
+            d.list_tag()
+            # for tag in tags:
+            #     print(f't: {tag[:8]}..') if len(tag) > 10 else print(f't: {tag.ljust(10)}')
         return
 
 if __name__ == "__main__":
