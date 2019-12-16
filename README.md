@@ -18,3 +18,5 @@ Work in progress . .
 - [ ] add display class
     - [ ] define methods
     - [ ] test
+- [ ] Add examples and work on the git repo connection
+- [ ] write routine for auto backup and start up
