@@ -16,6 +16,7 @@ Work in progress . .
     - [X] windows
     - [X] macs using click
 - [ ] add display class
+    - [X] add prototype and test less pager
     - [ ] define methods
     - [ ] test
 - [ ] Add examples and work on the git repo connection
