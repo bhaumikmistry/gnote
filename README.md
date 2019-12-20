@@ -20,3 +20,6 @@ Work in progress . .
     - [ ] test
 - [ ] Add examples and work on the git repo connection
 - [ ] write routine for auto backup and start up
+- [ ] Added newly added list option to display class
+- [ ] Use display call from gnote
+- [ ] Make list and display simple as git log
